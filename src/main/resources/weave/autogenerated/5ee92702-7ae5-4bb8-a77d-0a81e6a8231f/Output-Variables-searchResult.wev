@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_5ee92702_7ae5_4bb8_a77d_0a81e6a8231f_Output_Variables_searchResult = Array<{  baseUri?: String,   clientId?: String,   email?: String,   lastUpdated?: String,   name?: String,   racerId?: String,   _?: Any}>
+

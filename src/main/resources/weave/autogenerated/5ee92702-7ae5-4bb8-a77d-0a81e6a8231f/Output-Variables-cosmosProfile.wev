@@ -1,0 +1,12 @@
+%dw 2.0
+
+type auto_5ee92702_7ae5_4bb8_a77d_0a81e6a8231f_Output_Variables_cosmosProfile = {
+  lastUpdated?: String, 
+  racerId?: String, 
+  clientId: String, 
+  baseUri?: String, 
+  name: String, 
+  email: String, 
+  _?: Any
+}
+

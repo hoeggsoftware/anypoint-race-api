@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:race-data-system-api="http://www.mulesoft.org/schema/mule/race-data-system-api" xmlns:redis="http://www.mulesoft.org/schema/mule/redis"
-	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
-	xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:racer-data-system-api="http://www.mulesoft.org/schema/mule/racer-data-system-api" xmlns:race-data-system-api="http://www.mulesoft.org/schema/mule/race-data-system-api"
+	xmlns:redis="http://www.mulesoft.org/schema/mule/redis"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/redis/current/mule-redis.xsd
-http://www.mulesoft.org/schema/mule/race-data-system-api http://www.mulesoft.org/schema/mule/race-data-system-api/current/mule-race-data-system-api.xsd">
-	<ee:object-store-caching-strategy name="racerIdCachingStrategy" doc:name="Caching Strategy" doc:id="8b2f7bb7-e055-434b-929c-bb931b876ad4" keyGenerationExpression="#[attributes.headers.client_id]" >
+http://www.mulesoft.org/schema/mule/race-data-system-api http://www.mulesoft.org/schema/mule/race-data-system-api/current/mule-race-data-system-api.xsd
+http://www.mulesoft.org/schema/mule/racer-data-system-api http://www.mulesoft.org/schema/mule/racer-data-system-api/current/mule-racer-data-system-api.xsd">
+	<ee:object-store-caching-strategy name="racerIdCachingStrategy" doc:name="Caching Strategy" doc:id="c072f2a0-8f0b-450a-8b7a-385094343ab1" keyGenerationExpression="#[attributes.headers.client_id]" >
 		<os:private-object-store alias="registerCacheObjectStore" entryTtl="30" entryTtlUnit="DAYS"/>
 	</ee:object-store-caching-strategy>
-	<flow name="registerRacer" doc:id="7edfeca7-3d19-4a8a-94cb-b4ba51dfb9be" >
-		<validation:is-not-null doc:name="Is not null" doc:id="3f447caa-4739-4fc3-83c3-00a6f64aa268" value="#[vars.clientId]">
+	<flow name="registerRacer" doc:id="5ee92702-7ae5-4bb8-a77d-0a81e6a8231f" >
+		<validation:is-not-null doc:name="Is not null" doc:id="b2ccbb83-f73c-4d34-8ac2-1e5e4b46947c" value="#[vars.clientId]">
 			<error-mapping sourceType="VALIDATION:NULL" targetType="APP:CLIENT_ID_MISSING" />
 		</validation:is-not-null>
-		<race-data-system-api:search-racers doc:name="by client id" doc:id="e93480f5-dc78-4c50-b091-eb6d1affaf9c" config-ref="raceDataSystemApiConfig" client-id="#[vars.clientId]" target="searchResult"/>
-		<choice doc:name="Choice" doc:id="fd8a4200-defe-4368-bc66-3ad97c955fc1" >
+		<race-data-system-api:search-racers doc:name="by client id" doc:id="24c6db2a-266c-448e-832d-bf6ae4139fbf" config-ref="raceDataSystemApiConfig" client-id="#[vars.clientId]" target="searchResult"/>
+		<choice doc:name="Choice" doc:id="f64d374c-0b8f-47f8-a80e-210246a31ed1" >
 			<when expression="#[isEmpty(vars.searchResult)]">
-				<ee:transform doc:name="racer" doc:id="cb6e3fad-0340-43fc-8d2c-d00cf78a8ef1">
+				<ee:transform doc:name="racer" doc:id="cd7e0ac4-5c4c-4383-969c-c4752471dd24">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 import mergeWith from dw::core::Objects
@@ -32,11 +33,12 @@ payload mergeWith {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-				<race-data-system-api:create-racer doc:name="Create racer" doc:id="fde57ecf-ecf5-4b4c-8064-a0a33b1cf6b2" config-ref="raceDataSystemApiConfig"/>
+				<race-data-system-api:create-racer doc:name="Create racer" doc:id="37dae1ed-3200-4020-bd58-038719dd406e" config-ref="raceDataSystemApiConfig"/>
+				<racer-data-system-api:create-profile doc:name="Create profile" doc:id="6695f1e0-78c0-4cdc-82c3-0c2b0ea5b432" config-ref="racerDataSystemAPIConfig"/>
 			</when>
 			<otherwise >
-				<set-variable value="#[vars.searchResult[0].racerId]" doc:name="racerId" doc:id="ee68f7bf-12bf-462d-a8b3-ac36c84a4f28" variableName="racerId"/>
-				<ee:transform doc:name="racer" doc:id="6aaf3486-37f4-477b-bf0f-95a285c21259">
+				<set-variable value="#[vars.searchResult[0].racerId]" doc:name="racerId" doc:id="6114ce77-d966-4ba7-94c1-ff770065fbdf" variableName="racerId"/>
+				<ee:transform doc:name="racer" doc:id="86e6e322-e02d-4a30-8229-cdce90070b86">
 					<ee:message>
 						<ee:set-payload><![CDATA[%dw 2.0
 import mergeWith from dw::core::Objects
@@ -48,15 +50,15 @@ payload mergeWith {
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
-				<race-data-system-api:set-racer doc:name="Set Racer" doc:id="9b9b467c-47de-417f-aabe-f933c4c9de8f" config-ref="raceDataSystemApiConfig" id="#[vars.racerId]"/>
+				<race-data-system-api:set-racer doc:name="Set Racer" doc:id="c9955517-9ba8-45ce-a74d-a272045be236" config-ref="raceDataSystemApiConfig" id="#[vars.racerId]"/>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="INFO" doc:id="60528fa0-8696-44a6-b973-5cdde3b4586c" message="Registered racer #[payload.racerId] for client #[payload.clientId]: #[payload.email]" category="race.register"/>
+		<logger level="INFO" doc:name="INFO" doc:id="f2de791c-6f89-4fa6-88bc-e711198d94a1" message="Registered racer #[payload.racerId] for client #[payload.clientId]: #[payload.email]" category="race.register"/>
 	</flow>
-	<sub-flow name="getRacerId" doc:id="835aaecc-5ab2-44a0-99b8-9a7b562bd50e" >
-		<race-data-system-api:search-racers doc:name="Search Racers" doc:id="b5869bc6-bd4b-4764-90c3-2a82d29452bf" config-ref="raceDataSystemApiConfig" client-id="#[vars.clientId]" result="id"/>
-		<logger level="TRACE" doc:name="TRACE" doc:id="9688f0a4-db84-4d9e-8042-6533fef4f761" message="Found #[sizeOf(payload)] racers for client ID #[vars.clientId]" category="race.racer.search"/>
-		<ee:transform doc:name="Transform Message" doc:id="32f5640c-27cb-4372-9bf4-713137c8fde6" >
+	<sub-flow name="getRacerId" doc:id="8b5ab2a7-3dac-47f4-897a-fb5098441622" >
+		<race-data-system-api:search-racers doc:name="Search Racers" doc:id="bca00ee0-ae7e-4b89-88de-b66e9cb2e698" config-ref="raceDataSystemApiConfig" client-id="#[vars.clientId]" result="id"/>
+		<logger level="TRACE" doc:name="TRACE" doc:id="c62d4ecb-1162-44c2-b767-4823e370ea20" message="Found #[sizeOf(payload)] racers for client ID #[vars.clientId]" category="race.racer.search"/>
+		<ee:transform doc:name="Transform Message" doc:id="94257fa3-1d97-4ccd-b670-0abbd33e8b34" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json

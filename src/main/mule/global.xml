@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:referee-process-api="http://www.mulesoft.org/schema/mule/referee-process-api"
-	xmlns:race-data-system-api="http://www.mulesoft.org/schema/mule/race-data-system-api"
-	xmlns:redis="http://www.mulesoft.org/schema/mule/redis" xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:racer-data-system-api="http://www.mulesoft.org/schema/mule/racer-data-system-api" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:referee-process-api="http://www.mulesoft.org/schema/mule/referee-process-api"
+	xmlns:race-data-system-api="http://www.mulesoft.org/schema/mule/race-data-system-api" xmlns:redis="http://www.mulesoft.org/schema/mule/redis" xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/oauth http://www.mulesoft.org/schema/mule/oauth/current/mule-oauth.xsd
 http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
@@ -11,13 +11,14 @@ http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/redis/current/mule-redis.xsd
 http://www.mulesoft.org/schema/mule/race-data-system-api http://www.mulesoft.org/schema/mule/race-data-system-api/current/mule-race-data-system-api.xsd
 http://www.mulesoft.org/schema/mule/referee-process-api http://www.mulesoft.org/schema/mule/referee-process-api/current/mule-referee-process-api.xsd
-http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
-	<global-property doc:name="Global Property" doc:id="7856bb19-6f24-4ce3-94db-c749613205a6" name="mule.env" value="local" />
-	<configuration-properties doc:name="Configuration properties" doc:id="7dd03197-6465-46dd-87c5-7f709a4dc803" file="config/config-${mule.env}.yaml" />
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/racer-data-system-api http://www.mulesoft.org/schema/mule/racer-data-system-api/current/mule-racer-data-system-api.xsd">
+	<global-property doc:name="Global Property" doc:id="38764a99-00d2-4aef-b9aa-f087eb36fe8f" name="mule.env" value="local" />
+	<configuration-properties doc:name="Configuration properties" doc:id="303045a1-be24-430d-b17b-65e95fa45085" file="config/config-${mule.env}.yaml" />
     <http:listener-config name="httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="${http.port}" />
     </http:listener-config>
-	<http:request-config name="exchangeV2HttpRequestConfig" doc:name="HTTP Request configuration" doc:id="4dc19007-7bd0-4d1c-9f92-0d43bef9bfab" basePath="/exchange/api/v2" enableCookies="false" responseTimeout="120000">
+	<http:request-config name="exchangeV2HttpRequestConfig" doc:name="HTTP Request configuration" doc:id="93b52c32-46c1-4f3b-8306-72da00cb3d95" basePath="/exchange/api/v2" enableCookies="false" responseTimeout="120000">
 		<http:request-connection host="anypoint.mulesoft.com" port="443" protocol="HTTPS" connectionIdleTimeout="150000">
 			<http:authentication >
 				<oauth:client-credentials-grant-type clientId="${anypoint.app.clientId}" clientSecret="${anypoint.app.clientSecret}" tokenUrl="https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token"/>
@@ -27,15 +28,15 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</http:client-socket-properties>
 		</http:request-connection>
 	</http:request-config>
-	<http:request-config name="accountsHttpRequestConfig" doc:name="HTTP Request configuration" doc:id="e532c8f1-25cb-40e7-a4bf-556e973c6b0b" basePath="/accounts" >
+	<http:request-config name="accountsHttpRequestConfig" doc:name="HTTP Request configuration" doc:id="f999abfe-7567-4a30-9722-8732f87d12fd" basePath="/accounts" >
 		<http:request-connection protocol="HTTPS" host="anypoint.mulesoft.com" port="443" />
 	</http:request-config>
-	<api-gateway:autodiscovery apiId="${anypoint.api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="7e1fbca3-3bff-4464-acd9-f2ce95227e3e" flowRef="anypoint-race-api-main" />
-	<os:object-store name="practiceObjectStore" doc:name="Object store" doc:id="b4fe585f-70a9-4db3-88f3-6f1e57f33484" entryTtl="12" entryTtlUnit="HOURS" expirationInterval="2"/>
-	<os:object-store name="raceObjectStore" doc:name="Object store" doc:id="aa49b4df-09f8-4dd1-afdb-c4dd67c3b62b" entryTtl="2" expirationInterval="2" entryTtlUnit="HOURS"/>
-	<referee-process-api:config name="refereeProcessApiConfig" doc:name="Referee Process API Config" doc:id="f6bbdef3-bf57-4fd4-8a1d-fb35bd12defe" property_host="${referee.host}" property_port="${referee.port}" property_basePath="${referee.path}" property_protocol="${referee.protocol}" property_username="${anypoint.app.clientId}" property_password="${anypoint.app.clientSecret}" property_responseTimeout="600000"/>
-	<race-data-system-api:config name="raceDataSystemApiConfig" doc:name="Race Data System API Config" doc:id="86c1aec2-24ac-460e-b60f-d6a48c462cac" property_host="${racedata.host}" property_port="${racedata.port}" property_basePath="${racedata.path}" property_protocol="${racedata.protocol}" property_username="${anypoint.app.clientId}" property_password="${anypoint.app.clientSecret}" />
-	<vm:config name="VM_Config" doc:name="VM Config" doc:id="37caf69b-d742-475b-950e-a1e4028d58e6" >
+	<api-gateway:autodiscovery apiId="${anypoint.api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="e85b2324-14d5-4ba5-885e-f61f6c0a4def" flowRef="anypoint-race-api-main" />
+	<os:object-store name="practiceObjectStore" doc:name="Object store" doc:id="1a8d5f6e-9224-4b27-a8d6-3024bea51d03" entryTtl="12" entryTtlUnit="HOURS" expirationInterval="2"/>
+	<os:object-store name="raceObjectStore" doc:name="Object store" doc:id="768a38bb-ddec-4870-b88d-b222dba12d6a" entryTtl="2" expirationInterval="2" entryTtlUnit="HOURS"/>
+	<referee-process-api:config name="refereeProcessApiConfig" doc:name="Referee Process API Config" doc:id="20259890-f36c-4889-8b82-6db35f02ee57" property_host="${referee.host}" property_port="${referee.port}" property_basePath="${referee.path}" property_protocol="${referee.protocol}" property_username="${anypoint.app.clientId}" property_password="${anypoint.app.clientSecret}" property_responseTimeout="600000"/>
+	<race-data-system-api:config name="raceDataSystemApiConfig" doc:name="Race Data System API Config" doc:id="481688a2-fb63-4d12-b5b4-4a7e7e6e7416" property_host="${racedata.host}" property_port="${racedata.port}" property_basePath="${racedata.path}" property_protocol="${racedata.protocol}" property_username="${anypoint.app.clientId}" property_password="${anypoint.app.clientSecret}" />
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="63b01924-87c9-43a9-9cfe-97606859d7f2" >
 		<vm:queues >
 			<vm:queue queueName="practice-rest-api" />
 			<vm:queue queueName="practice-averages" />
@@ -46,4 +47,5 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			<vm:queue queueName="official-level5" queueType="PERSISTENT" />
 		</vm:queues>
 	</vm:config>
+	<racer-data-system-api:config name="racerDataSystemAPIConfig" doc:name="Racer Data System API Config" doc:id="b9f29fa9-24fe-4303-a8b1-c469086d827a" property_username="${anypoint.app.clientId}" property_password="${anypoint.app.clientSecret}" property_host="${racerdata.host}" property_port="${racerdata.port}" property_protocol="${racerdata.protocol}" property_basePath="${racerdata.path}"/>
 </mule>

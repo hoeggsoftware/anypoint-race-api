@@ -139,7 +139,7 @@ output application/json
     <flow name="get:\health:anypoint-race-api-config">
         <set-payload value="Ok" doc:name="Ok" doc:id="f778d824-2707-4433-a698-40c4407eb460" />
     </flow>
-    <flow name="post:\register:application\json:anypoint-race-api-config">
+    <flow name="post:\register:application\json:anypoint-race-api-config" doc:id="2ba8c79e-eb40-4518-beaf-2536917b2b2b">
         <flow-ref doc:name="registerRacer" doc:id="af973961-b5d4-4d58-9584-62b4df5e3e27" name="registerRacer" />
         <error-handler>
             <on-error-continue enableNotifications="true" logException="false" doc:name="On Error Continue" doc:id="5c2bb858-3c43-4d2c-a227-d18cc4bc1942" type="APP:CLIENT_ID_MISSING">
