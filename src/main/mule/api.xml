@@ -238,23 +238,6 @@ output application/json
     </flow>
     <flow name="get:\profile\(racerId):anypoint-race-api-config">
 		<racer-data-system-api:get-racer doc:name="Get Racer" doc:id="73d0c0ba-da77-4ca0-bc13-e4be2406b0c8" config-ref="racerDataSystemAPIConfig" id="#[attributes.uriParams[0]]"/>
-		<!-- [STUDIO:"Logger"]<logger level="INFO" doc:name="Logger" doc:id="8925903e-c79b-474a-852f-89ea4323412b" /> [STUDIO] -->
-		<ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="racerId">attributes.uriParams.'racerId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  name: "Sylvester the Cat",
-  email: "sylvester@wb.com",
-  baseUri: "https://api.wb.com/anypoint-speedway/sylvester-racer"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="15557219-7667-43a7-9264-a1d75ef9a097" message='"completed profile"'/>
     </flow>
 </mule>
