@@ -34,9 +34,9 @@ racedata:
   
 racerdata:
   host: localhost
-  port: "8094"
+  port: "8081"
   protocol: HTTP
-  path: /api
+  path: /racerdata-sapi
 
 race:
   expiry: "600" # seconds
