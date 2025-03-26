@@ -51,6 +51,7 @@ payload mergeWith {
 					</ee:message>
 				</ee:transform>
 				<race-data-system-api:set-racer doc:name="Set Racer" doc:id="c9955517-9ba8-45ce-a74d-a272045be236" config-ref="raceDataSystemApiConfig" id="#[vars.racerId]"/>
+				<racer-data-system-api:update-racer doc:name="Update Racer" doc:id="fa052cf9-8832-45d4-8860-048a11912c14" config-ref="racerDataSystemAPIConfig" target="cosmoProfile" id="#[vars.racerId]"/>
 			</otherwise>
 		</choice>
 		<logger level="INFO" doc:name="INFO" doc:id="f2de791c-6f89-4fa6-88bc-e711198d94a1" message="Registered racer #[payload.racerId] for client #[payload.clientId]: #[payload.email]" category="race.register"/>
