@@ -29,6 +29,12 @@ racedata:
   protocol: HTTP
   path: /api
 
+racerdata:
+  host: beyond-test.anypointspeedway.com
+  port: "443"
+  protocol: HTTPS
+  path: /racerdata-sapi
+
 race:
   expiry: "7200" # seconds
 
