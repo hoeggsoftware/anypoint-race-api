@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:racer-data-system-api="http://www.mulesoft.org/schema/mule/racer-data-system-api" xmlns:race-data-system-api="http://www.mulesoft.org/schema/mule/race-data-system-api"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/race-data-system-api http://www.mulesoft.org/schema/mule/race-data-system-api/current/mule-race-data-system-api.xsd
+http://www.mulesoft.org/schema/mule/racer-data-system-api http://www.mulesoft.org/schema/mule/racer-data-system-api/current/mule-racer-data-system-api.xsd">
+	<sub-flow name="profileData" doc:id="96c4ac38-1eea-43dd-a6eb-8045f078e53a" >
+		<racer-data-system-api:get-public-profile doc:name="Get Public Profile" doc:id="a973717d-f9ea-4b44-a075-ea4e8f598804" config-ref="racerDataSystemAPIConfig" sc-name="#[attributes.uriParams[0]]" target="cosmosProfile"/>
+		<race-data-system-api:get-entry doc:name="Get Entry" doc:id="e2bb868c-0f47-4d88-a531-22c970c965a4" config-ref="raceDataSystemApiConfig" id="#[vars.cosmosProfile.racerId]"/>
+	</sub-flow>
+</mule>

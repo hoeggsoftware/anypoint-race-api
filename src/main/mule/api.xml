@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:race-data-system-api="http://www.mulesoft.org/schema/mule/race-data-system-api" xmlns:racer-data-system-api="http://www.mulesoft.org/schema/mule/racer-data-system-api" xmlns:redis="http://www.mulesoft.org/schema/mule/redis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/redis/current/mule-redis.xsd http://www.mulesoft.org/schema/mule/race-data-system-api http://www.mulesoft.org/schema/mule/race-data-system-api/current/mule-race-data-system-api.xsd http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd http://www.mulesoft.org/schema/mule/racer-data-system-api http://www.mulesoft.org/schema/mule/racer-data-system-api/current/mule-racer-data-system-api.xsd">
-    <apikit:config name="anypoint-race-api-config" api="resource::ae6d7954-6fc2-4f3e-8777-80ff8aabd859:anypoint-race-api:4.0.14:raml:zip:anypoint-race-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="anypoint-race-api-config" api="resource::ae6d7954-6fc2-4f3e-8777-80ff8aabd859:anypoint-race-api:4.0.16:raml:zip:anypoint-race-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="anypoint-race-api-main">
         <http:listener config-ref="httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -204,28 +204,7 @@ output application/json
     <flow name="get:\racers\mine\entry:anypoint-race-api-config" doc:id="0109f5a3-7f5b-4eae-8fcb-34e16a3a479e">
         <race-data-system-api:search-racers doc:name="Search Racers" doc:id="5c1b5456-511f-4a29-b3b7-37721e69ea2a" config-ref="raceDataSystemApiConfig" client-id="#[vars.clientId]" result="id" />
         <race-data-system-api:get-entry doc:name="Get Entry" doc:id="349f0a36-81a2-4f69-abee-7773af094c0e" config-ref="raceDataSystemApiConfig" id="#[payload[0].racerId]" />
-		<ee:transform doc:name="Transform Message" doc:id="4fb91de7-1940-4081-a206-ad2a7280db1d" >
-			<ee:message >
-			</ee:message>
-			<ee:variables >
-				<ee:set-variable variableName="profile" ><![CDATA[%dw 2.0
-output application/json
----
-{
-  "name": payload.racer.name,
-  "racerId": payload.racer.id,
-  "clientId": vars.clientId,
-  "baseUri": payload.racer.baseUri,
-  "nameScore": payload.challengeScore.name,
-  "questionScore": payload.challengeScore.question,
-  "biasScore": payload.challengeScore.bias
-}]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<racer-data-system-api:update-racer doc:name="Update Racer" doc:id="1c025ce3-16ce-49a9-ae56-d12ed05a70e0" config-ref="racerDataSystemAPIConfig" id="#[payload.racer.id]" target="cosmosProfile">
-			<racer-data-system-api:update-racer-request-data ><![CDATA[#[vars.profile]]]></racer-data-system-api:update-racer-request-data>
-		</racer-data-system-api:update-racer>
-		<ee:transform doc:name="Transform Message" doc:id="cfb74eac-f7fe-408b-bab2-355c110461e3">
+        <ee:transform doc:name="Entry Info" doc:id="cfb74eac-f7fe-408b-bab2-355c110461e3">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -237,7 +216,7 @@ output application/json
   }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="a52cacd5-3d2c-4341-b9e7-e6dc33ff7049" />
+        <logger level="INFO" doc:name="Logger" doc:id="a52cacd5-3d2c-4341-b9e7-e6dc33ff7049" />
     </flow>
     <flow name="put:\racers\mine\entry:anypoint-race-api-config" doc:id="d51a1505-ed60-4a11-8518-01b701dc8fe3">
         <flow-ref doc:name="getRacerId" doc:id="6564ffd6-713a-40c0-9ae3-68f35c3f686d" name="getRacerId" target="racerId" />
@@ -257,38 +236,36 @@ output application/json
         <flow-ref doc:name="leaderboard" doc:id="01c79235-770a-4538-93af-79de1e827fa8" name="leaderboard" />
     </flow>
     <flow name="get:\profile\(racerId):anypoint-race-api-config">
-        <racer-data-system-api:get-racer-profile doc:name="Get Racer Profile" doc:id="2be90a11-e41a-49eb-9949-6f6c5818ad1b" config-ref="racerDataSystemAPIConfig" id="#[attributes.uriParams[0]]"/>
-		<logger level="INFO" doc:name="Logger" doc:id="15557219-7667-43a7-9264-a1d75ef9a097" message="&quot;completed profile&quot;" />
+        <racer-data-system-api:get-racer-profile doc:name="Get Racer Profile" doc:id="2be90a11-e41a-49eb-9949-6f6c5818ad1b" config-ref="racerDataSystemAPIConfig" id="#[attributes.uriParams[0]]" />
+        <logger level="INFO" doc:name="Logger" doc:id="15557219-7667-43a7-9264-a1d75ef9a097" message="&quot;completed profile&quot;" />
     </flow>
     <flow name="get:\racers\(racerId)\who-are-you:anypoint-race-api-config">
         <ee:transform doc:name="Transform Message">
             <ee:variables>
-                <ee:set-variable variableName="racerId">attributes.uriParams.'racerId'</ee:set-variable>
+                <ee:set-variable variableName="racerId"><![CDATA["karanja"]]></ee:set-variable>
             </ee:variables>
         </ee:transform>
         <logger level="INFO" message="get:\racers\(racerId)\who-are-you:anypoint-race-api-config" />
     </flow>
-    <flow name="get:\profile\(racer):anypoint-race-api-config">
-        <scheduler doc:name="Scheduler" doc:id="6972a181-7054-46ce-bfda-ad725dadc021" >
-			<scheduling-strategy >
-				<fixed-frequency startDelay="10" timeUnit="DAYS"/>
-			</scheduling-strategy>
-		</scheduler>
-		<ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="racer"><![CDATA["Karanja"]]></ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <racer-data-system-api:get-public-profile doc:name="Get Public Profile" doc:id="7702ebf0-e93b-4131-a375-cf4574b909d1" config-ref="racerDataSystemAPIConfig" sc-name="#[vars.racer]"/>
-		<ee:transform doc:name="Transform Message" doc:id="02c36a94-cab9-4243-b72d-46664aba10f1" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
+    <flow name="get:\profile\name\(racer):anypoint-race-api-config">
+        <flow-ref doc:name="profileData" doc:id="04ffdff4-7c40-469e-a2df-51e1ed6f56c8" name="profileData" />
+        <ee:transform doc:name="Transform Message" doc:id="961fa028-9585-4ace-9cb8-cfe1be07c593">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+
+var cosmosInfo = vars.cosmosProfile
+var redisinfo = payload
 ---
 {
+	racer: {
+		name: cosmosInfo.name,
+		started: cosmosInfo.started
+	},
+	scores: redisinfo.challengeScore 
 }]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<logger level="INFO" message="get:\profile\(racer):anypoint-race-api-config" />
+            </ee:message>
+        </ee:transform>
+        <logger level="INFO" message="get:\profile\name\(racer):anypoint-race-api-config" />
     </flow>
 </mule>

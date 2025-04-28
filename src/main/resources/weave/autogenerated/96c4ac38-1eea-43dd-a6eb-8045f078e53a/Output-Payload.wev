@@ -1,0 +1,13 @@
+%dw 2.0
+
+type auto_96c4ac38_1eea_43dd_a6eb_8045f078e53a_Output_Payload = {
+  racer: String, 
+  challengeScore?: {
+    question?: Number, 
+    bias?: Number, 
+    name?: Number, 
+    _?: Any
+  }, 
+  _?: Any
+}
+

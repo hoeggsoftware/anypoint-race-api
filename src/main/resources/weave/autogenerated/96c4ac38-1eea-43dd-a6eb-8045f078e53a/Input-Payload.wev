@@ -1,0 +1,22 @@
+%dw 2.0
+
+type auto_96c4ac38_1eea_43dd_a6eb_8045f078e53a_Input_Payload = {
+  racer: String, 
+  challengeScore?: {
+    question?: {
+      score?: Number, 
+      _?: Any
+    }, 
+    bias?: {
+      score?: String, 
+      _?: Any
+    }, 
+    name?: {
+      score?: Number, 
+      _?: Any
+    }, 
+    _?: Any
+  }, 
+  _?: Any
+}
+
