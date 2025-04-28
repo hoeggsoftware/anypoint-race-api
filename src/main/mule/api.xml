@@ -260,7 +260,7 @@ var redisinfo = payload
 {
 	racer: {
 		name: cosmosInfo.name,
-		started: cosmosInfo.started
+		started: cosmosInfo.raceStarted
 	},
 	scores: redisinfo.challengeScore 
 }]]></ee:set-payload>
